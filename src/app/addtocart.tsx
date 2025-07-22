@@ -2,6 +2,7 @@
 import { useState } from "react";
 import ProductCard from "./ProductCard";
 import { useCart } from "./CartContext";
+import Link from "next/link";
 
 interface Product {
   id: number;
@@ -82,7 +83,7 @@ export default function AddToCartPage() {
       <header className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 relative">
         <h1 className="text-3xl sm:text-4xl font-bold text-blue-900">EcomCloth - Add to Cart Page</h1>
         <nav className="flex gap-4">
-          <a href="/" className="text-green-700 hover:underline font-medium">Home</a>
+          <Link href="/" className="text-green-700 hover:underline font-medium">Home</Link>
         </nav>
         {/* Cart Icon */}
         <button
