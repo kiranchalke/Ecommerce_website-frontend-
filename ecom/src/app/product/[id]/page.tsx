@@ -3,6 +3,7 @@ import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useCart } from '../../CartContext';
+import Navbar from "../../Navbar";
 
 const products = [
   {
@@ -75,67 +76,70 @@ export default function ProductDetails() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-pink-50 p-6">
-      <div className="bg-white rounded-2xl shadow-lg p-8 max-w-2xl w-full flex flex-col sm:flex-row gap-8">
-        <div className="flex-1 flex items-center justify-center">
-          <Image
-            src={product.image}
-            alt={product.name}
-            width={320}
-            height={320}
-            className="object-cover rounded-xl"
-          />
-        </div>
-        <div className="flex-1 flex flex-col gap-4">
-          <h1 className="text-2xl font-bold text-blue-900 mb-2">{product.name}</h1>
-          <span className="text-lg font-semibold text-gray-700 mb-2">${product.price.toFixed(2)}</span>
-          <span className="text-sm font-medium text-gray-500 mb-2">Category: {product.category}</span>
-          <div className="mb-4">
-            <span className="block text-gray-700 font-medium mb-1">Color:</span>
-            <div className="flex gap-2 mb-2">
-              {product.colors.map((color) => (
-                <button
-                  key={color}
-                  className={`px-3 py-1 rounded-full border text-sm font-semibold transition-colors ${selectedColor === color ? 'bg-blue-600 text-white border-blue-600' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-blue-100'}`}
-                  onClick={() => setSelectedColor(color)}
-                >
-                  {color}
-                </button>
-              ))}
-            </div>
-            <span className="block text-gray-700 font-medium mb-1">Size:</span>
-            <div className="flex gap-2">
-              {["S", "M", "L", "XL", "XXL"].map((size) => (
-                <button
-                  key={size}
-                  className={`px-3 py-1 rounded-full border text-sm font-semibold transition-colors ${selectedSize === size ? 'bg-green-600 text-white border-green-600' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-green-100'}`}
-                  onClick={() => setSelectedSize(size)}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
+    <div>
+      <Navbar />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-pink-50 p-6">
+        <div className="bg-white rounded-2xl shadow-lg p-8 max-w-2xl w-full flex flex-col sm:flex-row gap-8">
+          <div className="flex-1 flex items-center justify-center">
+            <Image
+              src={product.image}
+              alt={product.name}
+              width={320}
+              height={320}
+              className="object-cover rounded-xl"
+            />
           </div>
-          <p className="text-gray-700 mb-4">{product.description}</p>
-          <button
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-            onClick={() => {
-              addToCart({ ...product, color: selectedColor, size: selectedSize }, 1);
-              setShowModal(true);
-              setTimeout(() => setShowModal(false), 1200);
-            }}
-          >
-            Add to Cart
-          </button>
-          {showModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-              <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center relative min-w-[250px]">
-                <svg className="mb-2" width="40" height="40" fill="none" stroke="green" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="green" strokeWidth="2" fill="none"/><path d="M8 12l2 2l4-4" stroke="green" strokeWidth="2" fill="none"/></svg>
-                <span className="text-green-700 font-semibold text-lg text-center">Added to cart!</span>
-                <span className="text-gray-600 text-sm mt-1 text-center">{product.name} ({selectedColor}, {selectedSize}) added to your cart.</span>
+          <div className="flex-1 flex flex-col gap-4">
+            <h1 className="text-2xl font-bold text-blue-900 mb-2">{product.name}</h1>
+            <span className="text-lg font-semibold text-gray-700 mb-2">${product.price.toFixed(2)}</span>
+            <span className="text-sm font-medium text-gray-500 mb-2">Category: {product.category}</span>
+            <div className="mb-4">
+              <span className="block text-gray-700 font-medium mb-1">Color:</span>
+              <div className="flex gap-2 mb-2">
+                {product.colors.map((color) => (
+                  <button
+                    key={color}
+                    className={`px-3 py-1 rounded-full border text-sm font-semibold transition-colors ${selectedColor === color ? 'bg-blue-600 text-white border-blue-600' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-blue-100'}`}
+                    onClick={() => setSelectedColor(color)}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
+              <span className="block text-gray-700 font-medium mb-1">Size:</span>
+              <div className="flex gap-2">
+                {["S", "M", "L", "XL", "XXL"].map((size) => (
+                  <button
+                    key={size}
+                    className={`px-3 py-1 rounded-full border text-sm font-semibold transition-colors ${selectedSize === size ? 'bg-green-600 text-white border-green-600' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-green-100'}`}
+                    onClick={() => setSelectedSize(size)}
+                  >
+                    {size}
+                  </button>
+                ))}
               </div>
             </div>
-          )}
+            <p className="text-gray-700 mb-4">{product.description}</p>
+            <button
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+              onClick={() => {
+                addToCart({ ...product, color: selectedColor, size: selectedSize }, 1);
+                setShowModal(true);
+                setTimeout(() => setShowModal(false), 1200);
+              }}
+            >
+              Add to Cart
+            </button>
+            {showModal && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+                <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center relative min-w-[250px]">
+                  <svg className="mb-2" width="40" height="40" fill="none" stroke="green" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="green" strokeWidth="2" fill="none"/><path d="M8 12l2 2l4-4" stroke="green" strokeWidth="2" fill="none"/></svg>
+                  <span className="text-green-700 font-semibold text-lg text-center">Added to cart!</span>
+                  <span className="text-gray-600 text-sm mt-1 text-center">{product.name} ({selectedColor}, {selectedSize}) added to your cart.</span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
