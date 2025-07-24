@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 export default function Navbar() {
-  const { cart, removeFromCart } = useCart();
+  const { cart, removeFromCart, cartLoaded } = useCart();
   const [showCart, setShowCart] = useState(false);
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
 
@@ -25,7 +25,11 @@ export default function Navbar() {
         aria-label="View cart"
       >
         <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        <span className="font-bold text-blue-700">{cartCount}</span>
+        {cartLoaded ? (
+          <span className="font-bold text-blue-700">{cartCount}</span>
+        ) : (
+          <span className="font-bold text-blue-700">...</span>
+        )}
       </button>
       {/* Cart Dropdown/Modal */}
       {showCart && (
