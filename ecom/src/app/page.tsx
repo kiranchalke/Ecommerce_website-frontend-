@@ -1,8 +1,10 @@
 'use client';
 
+import { useState, useEffect, Suspense } from "react";
 import { useCart } from "./CartContext";
 import ProductCard from "./ProductCard";
 import Navbar from "./Navbar";
+import { useSearchParams } from "next/navigation";
 
 // Types
 interface Product {
@@ -58,12 +60,10 @@ const products: Product[] = [
   },
 ];
 
-export default function Home() {
-  const { addToCart } = useCart();
-
+function HomeContent({ category, setCategory, addToCart, filteredProducts }: any) {
   return (
-    <div>
-      <Navbar />
+    <>
+      <Navbar category={category} setCategory={setCategory} />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-pink-50 p-4 sm:p-8">
         {/* Home Section (Hero) */}
         <section id="home" className="w-full flex flex-col items-center justify-center text-center py-12 sm:py-20 mb-10 bg-white/80 rounded-2xl shadow-lg">
@@ -72,15 +72,51 @@ export default function Home() {
           <a href="#products" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-full shadow transition-colors">Shop Now</a>
         </section>
         <main>
-          <h2 id="products" className="text-2xl font-semibold mb-6 text-center text-gray-800">Featured Products</h2>
+          <h2 id="products" className="text-2xl font-semibold mb-6 text-center text-gray-800">
+            {category === "All" ? "Featured Products" : `${category}'s Products`}
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {products.map((product) => (
+            {filteredProducts.map((product: any) => (
               <ProductCard key={product.id} product={product} addToCart={addToCart} />
             ))}
           </div>
         </main>
         <footer className="mt-12 text-center text-gray-500 text-sm">© 2024 EcomCloth. All rights reserved.</footer>
       </div>
-    </div>
+    </>
+  );
+}
+
+export default function Home() {
+  const { addToCart } = useCart();
+  const searchParams = useSearchParams();
+  const [category, setCategory] = useState<"All" | "Men" | "Women">("All");
+
+  // On mount, set category from query param if present
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    if (cat === "Men" || cat === "Women") {
+      setCategory(cat);
+    } else {
+      setCategory("All");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  // Filter products based on selected category
+  const filteredProducts =
+    category === "All"
+      ? products
+      : products.filter((p) => p.category === category);
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent
+        category={category}
+        setCategory={setCategory}
+        addToCart={addToCart}
+        filteredProducts={filteredProducts}
+      />
+    </Suspense>
   );
 }
